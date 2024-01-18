@@ -1,10 +1,11 @@
 import sys
 from flask import Flask, render_template, request, g
 from classes.person import Person
+from datafile import filename
 
 app = Flask(__name__)
 
-Person.read('data/')
+Person.read(filename)
 prev_option = ""
 
 @app.route("/", methods=["post","get"])
@@ -21,7 +22,7 @@ def index():
         Person.remove(obj.code)
         if not Person.previous():
             Person.first()
-        Person.write('data/')
+        Person.write(filename)
     elif option == "insert":
         butshow = "disabled"
         butedit = "enabled"
@@ -31,7 +32,7 @@ def index():
         strobj = request.form["code"] + ';' + request.form["name"] + ';' + \
         request.form["dob"] + ';' + request.form["salary"]
         Person.from_string(strobj)
-        Person.write('data/')
+        Person.write(filename)
         Person.last()
     elif prev_option == 'edit':
         obj = Person.current()
@@ -39,7 +40,7 @@ def index():
         obj.name = request.form["name"]
         obj.dob = request.form["dob"]
         obj.salary = float(request.form["salary"])
-        Person.write('data/')
+        Person.write(filename)
     elif option == "first":
         Person.first()
     elif option == "previous":
