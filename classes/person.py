@@ -96,7 +96,7 @@ class Person:
     # Write object to csv file
     @classmethod
     def write(cls, path = ''):
-        fh = open(path + 'person.csv', 'w')
+        fh = open(path + 'Person.csv', 'w')
         fh.write('code;name;dob;salary\n')
         for p in Person.obj.values():
             fh.write(p.__str__() + '\n')
@@ -107,7 +107,7 @@ class Person:
         cls.obj = dict()
         cls.lst = list()
         try:
-            fh = open(path + 'person.csv', 'r')
+            fh = open(path + 'Person.csv', 'r')
             fh.readline()
             for p in fh:
                 cls.from_string(p.strip())
