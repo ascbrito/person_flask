@@ -1,32 +1,27 @@
 # -*- coding: utf-8 -*-
 """
 @author: António Brito / Carlos Bragança
-(2022)
+(2021)
 #objective: class Person
+
 """""
-# Class Person - generic version with inheritance
-from classes.gclass import Gclass
+#%% Class Person v2
 import datetime
-class Person(Gclass):
+class Person:
+    # Dictionary of objects person
     obj = dict()
     lst = list()
     pos = 0
-    sortkey = ''
-    auto_number = 0
-    # Attribute names list, identifier attribute must be the first one
-    att = ['_code','_name','_dob','_salary']
-    # auto_number = 1      # Uncomment in case of auto number on
     # Constructor: Called when an object is instantiated
     def __init__(self, code, name, dob, salary):
-        super().__init__()
         # Object attributes
-        self._code = str(code)
+        self._code = code
         self._name = name
-        self._dob = datetime.date.fromisoformat(dob)
+        doblist = list(map(int, dob.split('-')))
+        self._dob = datetime.date(doblist[0], doblist[1], doblist[2])
         self._salary = float(salary)
-        # Add the new object to the dictionary of objects
+        # Add the new object to the Person list
         Person.obj[code] = self
-        # Add the code to the list of object codes
         Person.lst.append(code)
 
     # code property getter method
@@ -58,18 +53,67 @@ class Person(Gclass):
     # salary property setter method
     @salary.setter
     def salary(self, salary):
-        perc = (salary - self.salary) / self.salary
-        if perc < 0 or perc > 0.2:
-            print("Salary cannot be reduced or increased by more than 20%")
-        else:
-            self._salary = salary
-    # age property getter method
-    @property
-    def age(self):
-        tday = datetime.date.today()
-        age = tday.year - self.dob.year
-        if tday.month < self.dob.month or \
-            (tday.month == self.dob.month and tday.day < self.dob.day):
-            age -= 1
-        return age
+        self._salary = salary
 
+    # Class method to implement constructor overloading
+    @classmethod
+    def from_string(cls, person_data):
+        args_list = person_data.split(";")
+        return cls(args_list[0], args_list[1], args_list[2], float(args_list[3]))
+    @classmethod
+    def nextrec(cls):
+        cls.pos += 1
+        return cls.current()
+    @classmethod
+    def previous(cls):
+        cls.pos -= 1
+        return cls.current()
+    @classmethod
+    def current(cls):
+        if cls.pos < 0:
+            cls.pos = 0
+            return None
+        elif cls.pos >= len(cls.lst):
+            cls.pos = len(cls.lst) - 1
+            return None
+        else:
+            code = cls.lst[cls.pos]
+            return cls.obj[code]
+    @classmethod
+    def first(cls):
+        cls.pos = 0
+        return cls.current()
+    @classmethod
+    def last(cls):
+        cls.pos = len(cls.lst) - 1
+        return cls.current()
+    # Object delete method
+    @classmethod
+    def remove(cls, p):
+        cls.lst.remove(p)
+        del cls.obj[p]
+        del p
+    # Write object to csv file
+    @classmethod
+    def write(cls, path = ''):
+        fh = open(path + 'person.csv', 'w')
+        fh.write('code;name;dob;salary\n')
+        for p in Person.obj.values():
+            fh.write(p.__str__() + '\n')
+        fh.close()
+    # Read objects from csv file
+    @classmethod
+    def read(cls, path = ''):
+        cls.obj = dict()
+        cls.lst = list()
+        try:
+            fh = open(path + 'person.csv', 'r')
+            fh.readline()
+            for p in fh:
+                cls.from_string(p.strip())
+            fh.close()
+        except:
+            pass
+    # Method to return object info
+    def __str__(self):
+        return f'{self.code};{self.name};{self.dob};{self.salary}'
