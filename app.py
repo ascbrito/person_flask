@@ -50,10 +50,7 @@ def index():
     elif option == "last":
         Person.last()
     elif option == 'exit':
-        db = getattr(g, '_database', None)
-        if db is not None:
-            db.close()
-        sys.exit()
+        return "<h1>Thank you for using Person app</h1>"
     prev_option = option
     obj = Person.current()
     if option == 'insert':
