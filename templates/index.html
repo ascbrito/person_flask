@@ -3,7 +3,7 @@
     <head>
         <title>Person Data</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">    
-   </head>
+    </head>
     <body>
         <div>
             <img src="{{ url_for('static', filename='images/person.jpg')}}" alt="persons" width="200" height="200">
@@ -16,8 +16,8 @@
         <button id="exit" type="button" {{butshow}} onclick="window.location.href = '/?option=exit'" class="button">Exit</button>
 
         <div id="teste">
-        <h1>Person</h1>
-            <form id="form" action="/" method="post">
+            <h1>Person</h1>
+            <form id="form" action="/?option=save" method="post">
               <label for="code">Code:</label>
               <input type="text" {{butedit}} id="code" name="code" value="{{code}}"/>
               <br>

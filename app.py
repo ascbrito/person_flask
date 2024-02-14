@@ -1,3 +1,8 @@
+"""
+@author: António Brito / Carlos Bragança
+(2024)
+#objective: Flask example for class Person
+"""""
 from flask import Flask, render_template, request
 from classes.person import Person
 from datafile import filename
@@ -27,13 +32,13 @@ def index():
         butedit = "enabled"
     elif option == 'cancel':
         pass
-    elif prev_option == 'insert':
+    elif prev_option == 'insert' and option == 'save':
         strobj = request.form["code"] + ';' + request.form["name"] + ';' + \
         request.form["dob"] + ';' + request.form["salary"]
         Person.from_string(strobj)
         Person.write(filename)
         Person.last()
-    elif prev_option == 'edit':
+    elif prev_option == 'edit' and option == 'save':
         obj = Person.current()
         obj.code = request.form["code"]
         obj.name = request.form["name"]
@@ -53,17 +58,14 @@ def index():
     prev_option = option
     obj = Person.current()
     if option == 'insert':
-        code = ""
-        name = ""
-        dob = ""
-        salary = ""
+        code,name,dob,salary = "","","",""
     else:
         code = obj.code
         name = obj.name
         dob = obj.dob
         salary = obj.salary
 
-    return render_template("index.html", butshow=butshow, butedit=butedit, code=code,name = name,dob=dob,salary=salary)
+    return render_template("index.html", butshow=butshow, butedit=butedit,code=code,name=name,dob=dob,salary=salary)
 
 if __name__ == '__main__':
     app.run()
